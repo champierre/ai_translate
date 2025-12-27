@@ -8727,7 +8727,6 @@ var Scratch3AiTranslate = /*#__PURE__*/function () {
     _classCallCheck(this, Scratch3AiTranslate);
 
     this.runtime = runtime;
-    this.translationAPI = typeof window !== 'undefined' ? window.translation || null : null;
   }
 
   _createClass(Scratch3AiTranslate, [{
@@ -8769,11 +8768,11 @@ var Scratch3AiTranslate = /*#__PURE__*/function () {
               text: '中国語（繁体字）',
               value: 'zh-Hant'
             }, {
-              text: '韓国語',
-              value: 'ko'
-            }, {
               text: 'スペイン語',
               value: 'es'
+            }, {
+              text: 'ポルトガル語',
+              value: 'pt'
             }, {
               text: 'フランス語',
               value: 'fr'
@@ -8781,26 +8780,20 @@ var Scratch3AiTranslate = /*#__PURE__*/function () {
               text: 'ドイツ語',
               value: 'de'
             }, {
-              text: 'イタリア語',
-              value: 'it'
-            }, {
-              text: 'ポルトガル語',
-              value: 'pt'
-            }, {
               text: 'ロシア語',
               value: 'ru'
             }, {
-              text: 'アラビア語',
-              value: 'ar'
+              text: 'トルコ語',
+              value: 'tr'
             }, {
               text: 'ヒンディー語',
               value: 'hi'
             }, {
-              text: 'タイ語',
-              value: 'th'
-            }, {
               text: 'ベトナム語',
               value: 'vi'
+            }, {
+              text: 'ベンガル語',
+              value: 'bn'
             }]
           }
         }
@@ -8810,75 +8803,80 @@ var Scratch3AiTranslate = /*#__PURE__*/function () {
     key: "translateText",
     value: function () {
       var _translateText = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(args) {
-        var text, targetLang, canTranslate, translator, result;
+        var text, targetLang, detector, detectionResults, sourceLanguage, availability, translator, result;
         return regeneratorRuntime.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
                 text = cast.toString(args.TEXT);
-                targetLang = cast.toString(args.LANG);
+                targetLang = cast.toString(args.LANG); // APIの利用可能性をチェック
 
-                if (this.translationAPI) {
+                if (!(typeof self === 'undefined' || !('Translator' in self) || !('LanguageDetector' in self))) {
                   _context.next = 5;
                   break;
                 }
 
-                console.error('Translation API is not supported in this browser');
+                console.error('Translator API or LanguageDetector API is not supported in this browser');
                 return _context.abrupt("return", 'エラー: ブラウザが対応していません');
 
               case 5:
                 _context.prev = 5;
                 _context.next = 8;
-                return this.translationAPI.canTranslate({
-                  sourceLanguage: 'en',
+                return self.LanguageDetector.create();
+
+              case 8:
+                detector = _context.sent;
+                _context.next = 11;
+                return detector.detect(text.trim());
+
+              case 11:
+                detectionResults = _context.sent;
+                sourceLanguage = detectionResults[0].detectedLanguage; // 言語ペアの対応状況を確認
+
+                _context.next = 15;
+                return self.Translator.availability({
+                  sourceLanguage: sourceLanguage,
                   targetLanguage: targetLang
                 });
 
-              case 8:
-                canTranslate = _context.sent;
+              case 15:
+                availability = _context.sent;
 
-                if (!(canTranslate === 'no')) {
-                  _context.next = 11;
+                if (!(availability === 'unavailable')) {
+                  _context.next = 18;
                   break;
                 }
 
                 return _context.abrupt("return", 'エラー: この言語への翻訳はサポートされていません');
 
-              case 11:
-                _context.next = 13;
-                return this.translationAPI.createTranslator({
-                  sourceLanguage: 'en',
+              case 18:
+                _context.next = 20;
+                return self.Translator.create({
+                  sourceLanguage: sourceLanguage,
                   targetLanguage: targetLang
                 });
 
-              case 13:
+              case 20:
                 translator = _context.sent;
-
-                // ダウンロード待ち
-                if (canTranslate === 'after-download') {
-                  console.log('言語モデルをダウンロード中...');
-                } // 翻訳実行
-
-
-                _context.next = 17;
+                _context.next = 23;
                 return translator.translate(text);
 
-              case 17:
+              case 23:
                 result = _context.sent;
                 return _context.abrupt("return", result);
 
-              case 21:
-                _context.prev = 21;
+              case 27:
+                _context.prev = 27;
                 _context.t0 = _context["catch"](5);
                 console.error('Translation error:', _context.t0);
                 return _context.abrupt("return", 'エラー: 翻訳に失敗しました');
 
-              case 25:
+              case 31:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, this, [[5, 21]]);
+        }, _callee, null, [[5, 27]]);
       }));
 
       function translateText(_x) {

@@ -1,12 +1,13 @@
 # AI翻訳 (AI Translate)
 
-AI翻訳は、ChromeのTranslation APIを利用してテキストを翻訳するScratchの独自拡張機能です。
+AI翻訳は、ChromeのTranslator APIとLanguage Detector APIを利用してテキストを翻訳するScratchの独自拡張機能です。
 
 ## 特徴
 
-- ChromeのビルトインTranslation APIを使用
+- ChromeのビルトインTranslator APIを使用
+- 言語自動検出機能（Language Detector API）
 - オフラインでも動作（言語モデルダウンロード後）
-- 15言語に対応
+- 13言語に対応
 - シンプルで使いやすいインターフェース
 
 ## 対応言語
@@ -15,30 +16,28 @@ AI翻訳は、ChromeのTranslation APIを利用してテキストを翻訳する
 - 英語 (en)
 - 中国語（簡体字）(zh)
 - 中国語（繁体字）(zh-Hant)
-- 韓国語 (ko)
 - スペイン語 (es)
+- ポルトガル語 (pt)
 - フランス語 (fr)
 - ドイツ語 (de)
-- イタリア語 (it)
-- ポルトガル語 (pt)
 - ロシア語 (ru)
-- アラビア語 (ar)
+- トルコ語 (tr)
 - ヒンディー語 (hi)
-- タイ語 (th)
 - ベトナム語 (vi)
+- ベンガル語 (bn)
 
 ## 必要な環境
 
-- Chrome 120以降、またはEdge 120以降
-- Translation APIが有効になっているブラウザ
+- Chrome 130以降、またはEdge 130以降
+- Translator APIとLanguage Detector APIが有効になっているブラウザ
 
-### Translation APIの有効化
+### Translator APIの有効化
 
 Chrome/Edgeで以下の設定を確認してください：
 
 1. アドレスバーに `chrome://flags` を入力
-2. "Translation API" を検索
-3. "Enabled" に設定
+2. "Translator API" と "Language Detector API" を検索
+3. 両方を "Enabled" に設定
 4. ブラウザを再起動
 
 ## 使い方
@@ -61,12 +60,13 @@ URL入力欄に `ai_translate.mjs` のURLを入力すると、AI翻訳を開く�
 
 ### [テキスト]を[言語]に翻訳する
 
-指定したテキストを選択した言語に翻訳します。
+指定したテキストを選択した言語に翻訳します。入力テキストの言語は自動的に検出されます。
 
 **使用例:**
 ```
 「Hello」を「日本語」に翻訳する → 「こんにちは」
 「ありがとう」を「英語」に翻訳する → 「Thank you」
+「Bonjour」を「日本語」に翻訳する → 「こんにちは」（フランス語が自動検出される）
 ```
 
 ## 注意事項
@@ -74,7 +74,8 @@ URL入力欄に `ai_translate.mjs` のURLを入力すると、AI翻訳を開く�
 - 初回翻訳時に言語モデルのダウンロードが必要な場合があります
 - ダウンロード中は少し時間がかかる場合があります
 - オフラインでも使用できますが、初回は必ずオンライン環境が必要です
-- Translation APIはChrome 120以降の機能であるため、古いブラウザでは動作しません
+- Translator APIとLanguage Detector APIはChrome 130以降の機能であるため、古いブラウザでは動作しません
+- 入力テキストの言語は自動的に検出されるため、ソース言語を指定する必要はありません
 
 ## ライセンス
 

@@ -32,10 +32,10 @@ jobs:
         run: cp ./ai_translate/dist/ai_translate.mjs ./build
       - name: Copy sample.sb3 to build folder
         run: cp ./ai_translate/sample_projects/xcratch/sample.sb3 ./build
+      - name: Create turbowarp folder
+        run: mkdir -p ./build/turbowarp
       - name: Copy turbowarp extension to build folder
-        run: cp ./ai_translate/hello.js ./build
-      - name: Copy turbowarp extension to build folder
-        run: cp ./ai_translate/ai_translate.js ./build
+        run: cp ./ai_translate/turbowarp/index.js ./build/turbowarp
       - uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
